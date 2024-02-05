@@ -1,0 +1,33 @@
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "Batche" ]
+  pull_request:
+    branches: [ "Batche" ]
+
+jobs:
+
+  build:
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: RateYourProfessor/RateYourProfessor.sln
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore and Build
+      run: dotnet build ${{ env.Solution_Name }} --configuration Release
+
+    - name: Execute unit tests
+      run: dotnet test ${{ env.Solution_Name }} --configuration Release
